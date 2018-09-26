@@ -2,9 +2,10 @@
 import re
 from django.utils.deprecation import MiddlewareMixin
 from django.shortcuts import HttpResponse
+from django.conf import settings
 
 
-class CheckPermission(MiddlewareMixin):
+class RbacMiddleware(MiddlewareMixin):
     """
     用户权限管理
     """
@@ -21,18 +22,19 @@ class CheckPermission(MiddlewareMixin):
         2. 获取当前用户在session中保存的权限列表 ['/customer/list/','/customer/list/(?P<cid>\\d+)/']
         3. 权限信息匹配
         """
-        valid_url_list = [
-            '/login/',
-            '/admin/.*'
-        ]
+        # 写在配置文件中增加拓展性
+        # valid_url_list = [
+        #     '/login/',
+        #     '/admin/.*'
+        # ]
 
         current_url = request.path_info
-        for valid_url in valid_url_list:
+        for valid_url in settings.VALID_URL_LIST:
             if re.match(valid_url, current_url):
                 # 白名单中的URL无需权限验证即可访问
                 return None
 
-        permission_list = request.session.get('luffy_permission_url_list_key')
+        permission_list = request.session.get(settings.PERMISSION_SESSION_KEY)
         if not permission_list:
             return HttpResponse('未获取到用户权限信息，请登录！')
 

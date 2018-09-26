@@ -47,7 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'web.md.xxx.CheckPermission',
+    'rbac.middlewares.rbac.RbacMiddleware',
 ]
 
 ROOT_URLCONF = 'luffy_permission.urls'
@@ -161,3 +161,10 @@ FILE_UPLOAD_PERMISSIONS = None
 # see https://docs.python.org/3/library/os.html#files-and-directories.
 # 文件夹权限
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = None
+
+# ##################### 权限相关配置 ##########################
+PERMISSION_SESSION_KEY = "luffy_permission_url_list_key"
+VALID_URL_LIST = [
+    '/login/',
+    '/admin/.*'
+]
